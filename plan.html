@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Plan Konnect Associate</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: documento de lectura, navy en encabezado, contenido claro con títulos verdes. */
+:root{
+  --bg:#F5F5F5; --surface:#FFFFFF; --ink:#222222; --body:#3C3C3C; --muted:#5f6670; --line:#E3E3E3;
+  --verde:#76BC21; --verde-osc:#61A60E; --lima:#C2D500; --navy:#0A2240; --petroleo:#005677; --naranja:#FF9015;
+  --f:"Open Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  color-scheme:light;
+}
+*,::before,::after{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--body);font:15px/1.6 var(--f)}
+.top{background:var(--navy);padding-top:env(safe-area-inset-top,0px)}
+.nav{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:16px;height:56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.nav .logo{width:64px;height:28px;background:url(logo.png) left center/contain no-repeat;flex:none}
+.nav .links{display:flex;gap:16px;overflow-x:auto}
+.nav a{color:#b9c6d4;text-decoration:none;font-size:14px;font-weight:600;white-space:nowrap}
+.nav a[aria-current]{color:#fff;box-shadow:inset 0 -2px 0 var(--verde)}
+main{max-width:860px;margin:0 auto;padding-block:32px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:32px}
+h1,h2{margin:0;font-weight:800;line-height:1.15;text-wrap:balance}
+h1{font-size:clamp(28px,5vw,38px);color:var(--navy)}
+h2{font-size:21px;color:var(--verde-osc);margin-bottom:10px}
+p{margin:0 0 10px;max-width:68ch}
+.lede{font-size:17px;color:var(--ink)}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--petroleo);margin-bottom:6px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--verde);padding:14px 16px}
+.kpi b{display:block;font-size:26px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+.kpi span{font-size:13px;color:var(--muted)}
+.tw{overflow-x:auto;background:var(--surface);border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:620px}
+th{background:var(--navy);color:#fff;text-align:left;font-weight:600;padding:9px 10px}
+td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:top}
+tr.ex td{background:#fff6ea;font-weight:600}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--petroleo);font-weight:700}
+.gap{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px}
+.gap.no{background:#f8e4e2;color:#b4352f}.gap.par{background:#fff1e0;color:#a35400}.gap.ok{background:#eef7e3;color:#3f7f0a}
+ul.check{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+ul.check li{display:flex;gap:10px;align-items:flex-start}
+ul.check input{margin-top:5px;accent-color:var(--verde);width:16px;height:16px;flex:none}
+.note{border-left:3px solid var(--naranja);background:#fff6ea;padding:10px 14px}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font:700 14px var(--f);border:1px solid var(--verde);background:var(--verde);color:#fff;padding:10px 18px;border-radius:2px;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--petroleo);border-color:var(--petroleo)}
+a{color:var(--petroleo)}
+footer{background:var(--navy);color:#cdd6e0;font-size:13px}
+footer div{max-width:1080px;margin:0 auto;padding:18px max(16px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+:focus-visible{outline:2px solid var(--verde);outline-offset:2px}
+@media (max-width:420px){.nav{gap:12px} .nav .logo{width:44px} .nav .links{gap:12px} .nav a{font-size:13px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <nav class="nav" aria-label="Sitio">
+    <div class="logo" role="img" aria-label="ids"></div>
+    <div class="links"><a href="index.html">Simulator</a><a href="cards.html">Study cards</a><a href="concepts.html">Concepts</a><a href="plan.html" aria-current="page">Study plan</a></div>
+  </nav>
+</header>
+<main>
+<section>
+  <p class="eyebrow">Kong Konnect Certified Associate</p>
+  <h1>Plan de estudio</h1>
+  <p class="lede">Meta: presentar el examen el domingo 15 de noviembre de 2026, después de 13 sesiones y unas 23 horas de estudio repartidas en tres semanas.</p>
+  <div class="kpis">
+    <div class="kpi"><b>13</b><span>sesiones</span></div>
+    <div class="kpi"><b>23 h</b><span>de estudio</span></div>
+    <div class="kpi"><b>85%</b><span>meta en el examen de práctica</span></div>
+    <div class="kpi"><b>15 nov</b><span>examen tentativo</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>Temario oficial</h2>
+  <p>Kong actualizó el temario el 5 de octubre de 2026. La guía de preparación que circulaba en el equipo cubre bien el Gateway y deja por fuera cinco temas actuales.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Dominio</th><th>Tema</th><th>Cobertura en la guía</th><th>Cursos</th></tr></thead>
+    <tbody>
+      <tr><td>Platform Fundamentals</td><td>Propuesta de valor</td><td><span class="gap no">No la trata</span></td><td>KKSC-101</td></tr>
+      <tr><td>Platform Fundamentals</td><td>Arquitectura de alto nivel</td><td><span class="gap ok">Completa</span></td><td>KKSC-201, KKSC-202, KKSC-203</td></tr>
+      <tr><td>Core Services</td><td>API Gateway</td><td><span class="gap ok">Completa</span></td><td>KGLL-115, KGAC-101</td></tr>
+      <tr><td>Core Services</td><td>AI Gateway</td><td><span class="gap par">Parcial</span></td><td>KALL-101, KAAC-201</td></tr>
+      <tr><td>Core Services</td><td>Event Gateway</td><td><span class="gap no">No la trata</span></td><td>KEAC-101</td></tr>
+      <tr><td>Core Services</td><td>Identity</td><td><span class="gap par">Parcial</span></td><td>Documentación de Kong Identity</td></tr>
+      <tr><td>Applications</td><td>Developer Portal</td><td><span class="gap par">Parcial</span></td><td>KKSC-260</td></tr>
+      <tr><td>Applications</td><td>Catalog</td><td><span class="gap par">Parcial</span></td><td>Documentación de Catalog</td></tr>
+      <tr><td>Applications</td><td>Metering &amp; Billing</td><td><span class="gap no">No la trata</span></td><td>Documentación de Metering &amp; Billing</td></tr>
+      <tr><td>Applications</td><td>Observability</td><td><span class="gap par">Parcial</span></td><td>KKLL-220, KKLL-209</td></tr>
+      <tr><td>Management &amp; Operations</td><td>Analytics</td><td><span class="gap no">No la trata</span></td><td>KKLL-220</td></tr>
+      <tr><td>Management &amp; Operations</td><td>Organizations</td><td><span class="gap par">Parcial</span></td><td>KKSC-202</td></tr>
+      <tr><td>Integración</td><td>Sistema completo listo para producción</td><td><span class="gap no">No la trata</span></td><td>Study Guide y examen de práctica</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Agenda</h2>
+  <p>Horario de Bogotá. Las sesiones en semana van de 20:00 a 21:30.</p>
+  <div class="tw"><table>
+    <thead><tr><th>N.º</th><th>Fecha</th><th>Hora</th><th>Tema</th><th>Entregable</th></tr></thead>
+    <tbody>
+      <tr><td class="n">1</td><td>Lun 26 oct</td><td>20:00</td><td>Arranque y bases de la plataforma (KKSC-101)</td><td>Cuenta en Kong Academy, trial de Konnect, examen de práctica de diagnóstico</td></tr>
+      <tr><td class="n">2</td><td>Mar 27 oct</td><td>20:00</td><td>Arquitectura y despliegue (KKSC-201, KKSC-202)</td><td>Diagrama de CP, DP, regiones y opciones de despliegue</td></tr>
+      <tr><td class="n">3</td><td>Mié 28 oct</td><td>20:00</td><td>Plano de datos híbrido (KKSC-203)</td><td>Data plane en Docker y prueba de desconexión</td></tr>
+      <tr><td class="n">4</td><td>Jue 29 oct</td><td>20:00</td><td>Entidades del gateway y plugins (KGLL-115)</td><td>Upstream con health checks y dos plugins con distinto alcance</td></tr>
+      <tr><td class="n">5</td><td>Vie 30 oct</td><td>20:00</td><td>APIOps con decK (KKSC-204)</td><td>kong.yaml en Git con dump, diff y sync</td></tr>
+      <tr><td class="n">6</td><td>Sáb 31 oct</td><td>09:00 a 12:00</td><td>Laboratorio integrado</td><td>De OpenAPI a producción con auth y rate limiting</td></tr>
+      <tr><td class="n">7</td><td>Dom 1 nov</td><td>09:00 a 11:00</td><td>Repaso de la semana 1</td><td>Tarjetas de fases, precedencia y comandos de decK</td></tr>
+      <tr><td class="n">8</td><td>Mié 4 nov</td><td>20:00</td><td>AI Gateway (KALL-101, KAAC-201)</td><td>AI Proxy Advanced con failover y semantic cache</td></tr>
+      <tr><td class="n">9</td><td>Sáb 7 nov</td><td>10:30 a 12:30</td><td>Event Gateway e Identity (KEAC-101)</td><td>Casos de uso y diferencias con el API Gateway</td></tr>
+      <tr><td class="n">10</td><td>Dom 8 nov</td><td>09:00 a 11:00</td><td>Dev Portal, Catalog y Metering &amp; Billing (KKSC-260)</td><td>API publicada en el portal con una aplicación</td></tr>
+      <tr><td class="n">11</td><td>Lun 9 nov</td><td>20:00</td><td>Observability, Analytics y Organizations (KKLL-220, KKLL-209)</td><td>Reporte personalizado y pasos de diagnóstico</td></tr>
+      <tr><td class="n">12</td><td>Mié 11 nov</td><td>20:00</td><td>Examen de práctica oficial</td><td>Puntaje por dominio y decisión de fecha</td></tr>
+      <tr><td class="n">13</td><td>Sáb 14 nov</td><td>10:30 a 12:30</td><td>Simulacro final e integración</td><td>Arquitectura de punta a punta explicada en voz alta</td></tr>
+      <tr class="ex"><td class="n">Examen</td><td>Dom 15 nov</td><td>09:00 a 11:00</td><td>Kong Konnect Certified Associate</td><td>Fecha tentativa</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Cómo usar el sitio</h2>
+  <p>Las tarjetas de estudio sirven para repasar conceptos en ratos cortos. Cada tarjeta trae la pregunta, la respuesta y la trampa típica del examen. La sección de conceptos explica 45 términos de Kong con un ejemplo cada uno. El simulador mide el avance con un examen de 60 preguntas en 120 minutos y el mismo corte de 75%.</p>
+  <div class="cta"><a class="btn" href="cards.html">Abrir tarjetas</a><a class="btn ghost" href="index.html">Abrir simulador</a><a class="btn ghost" href="concepts.html">Ver conceptos</a></div>
+</section>
+
+<section>
+  <h2>Laboratorio práctico</h2>
+  <p>Si el examen trae tareas prácticas, el puntaje se gana aquí. El trial de Konnect y Docker local alcanzan. El avance de esta lista queda en tu navegador.</p>
+  <ul class="check" id="lab">
+    <li><input type="checkbox" id="l1"><label for="l1">Crear organización trial en Konnect y un token de cuenta de sistema</label></li>
+    <li><input type="checkbox" id="l2"><label for="l2">Levantar un data plane en Docker con el comando que genera Konnect</label></li>
+    <li><input type="checkbox" id="l3"><label for="l3">Cortar la red del contenedor, verificar que el tráfico sigue y que el nodo vuelve a sincronizar</label></li>
+    <li><input type="checkbox" id="l4"><label for="l4">Crear Service, Route y Upstream con dos Targets y health checks activos y pasivos</label></li>
+    <li><input type="checkbox" id="l5"><label for="l5">Aplicar rate-limiting global y otro por consumer, y comprobar cuál gana</label></li>
+    <li><input type="checkbox" id="l6"><label for="l6">Exportar con deck gateway dump, revisar con diff y aplicar con sync</label></li>
+    <li><input type="checkbox" id="l7"><label for="l7">Convertir un OpenAPI con openapi2kong y publicarlo en el Dev Portal</label></li>
+    <li><input type="checkbox" id="l8"><label for="l8">Configurar AI Proxy Advanced con dos modelos y failover</label></li>
+    <li><input type="checkbox" id="l9"><label for="l9">Revisar un reporte en Analytics y una traza en el Debugger</label></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Criterio para presentar</h2>
+  <p>La fecha del 15 de noviembre se mantiene con 85% o más en el examen de práctica oficial del miércoles 11 y ningún dominio por debajo de 70%. Si no se cumple, el examen pasa al domingo 22 de noviembre y la sesión 13 se dedica a los dominios débiles.</p>
+  <p class="note">El formato exacto del examen (proporción de preguntas y tareas prácticas, precio y política de repetición) se confirma en el FAQ oficial de Kong antes de pagar.</p>
+</section>
+
+<section>
+  <h2>Enlaces</h2>
+  <p><a href="https://konghq.com/academy/konnect-certification" target="_blank" rel="noopener">Página oficial de la certificación</a> · <a href="https://education.konghq.com" target="_blank" rel="noopener">Kong Academy</a> · <a href="https://app.trueability.com/ecommerce/kong-konnect-associate" target="_blank" rel="noopener">Reserva del examen</a> · <a href="https://developer.konghq.com/konnect/" target="_blank" rel="noopener">Documentación de Konnect</a></p>
+</section>
+</main>
+<footer><div>ids · Investigación y Desarrollo de Sistemas · www.ids.com.mx</div></footer>
+<script>
+document.querySelectorAll('#lab input').forEach(function(cb){
+  try{ cb.checked = localStorage.getItem('kkp:'+cb.id)==='1'; }catch(e){}
+  cb.addEventListener('change',function(){ try{ localStorage.setItem('kkp:'+cb.id, cb.checked?'1':'0'); }catch(e){} });
+});
+</script>
+</body>
+</html>

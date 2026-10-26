@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Konnect Study Cards</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: full-height vertical feed, one card per screen, scroll-snap. Dark brand surface (navy) by choice. */
+:root{
+  --navy:#0A2240; --navy-2:#11305a; --petroleo:#005677; --verde:#76BC21; --verde-osc:#61A60E; --lima:#C2D500;
+  --naranja:#FF9015; --ink:#ffffff; --muted:#b9c6d4; --line:rgba(255,255,255,.14);
+  --card:#ffffff; --card-ink:#222222; --card-body:#3C3C3C; --card-muted:#5f6670;
+  --f:"Open Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  color-scheme:dark;
+}
+*,::before,::after{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--navy);color:var(--ink);font-family:var(--f)}
+[hidden]{display:none!important}
+.top{position:fixed;inset:0 0 auto;z-index:20;padding-top:env(safe-area-inset-top,0px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));background:linear-gradient(var(--navy) 70%,rgba(10,34,64,0))}
+.nav{display:flex;align-items:center;gap:16px;height:52px}
+.nav .logo{width:64px;height:28px;background:url(logo.png) left center/contain no-repeat;flex:none}
+.nav a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;white-space:nowrap}
+.nav a[aria-current]{color:var(--ink);box-shadow:inset 0 -2px 0 var(--verde)}
+.nav .links{display:flex;gap:16px;overflow-x:auto}
+.bar{display:flex;align-items:center;gap:8px;padding-bottom:10px;overflow-x:auto;scrollbar-width:none}
+.bar::-webkit-scrollbar{display:none}
+.chip{flex:none;font:600 12px var(--f);padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
+.chip.on{background:var(--verde);border-color:var(--verde);color:var(--navy)}
+.lang{flex:none;display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.lang button{font:700 12px var(--f);padding:6px 10px;border:0;background:transparent;color:var(--muted);cursor:pointer}
+.lang button.on{background:#fff;color:var(--navy)}
+.count{flex:none;font:700 12px var(--f);color:var(--lima);margin-left:auto;padding-left:8px;font-variant-numeric:tabular-nums}
+.feed{height:100%;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior:contain;scrollbar-width:none}
+.feed::-webkit-scrollbar{display:none}
+.slide{height:100dvh;height:100vh;scroll-snap-align:start;scroll-snap-stop:always;display:flex;align-items:center;justify-content:center;padding:120px max(16px,env(safe-area-inset-right,0px)) calc(28px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));position:relative}
+@supports(height:100dvh){.slide{height:100dvh}}
+.card{width:min(520px,100%);height:min(560px,100%);perspective:1400px;cursor:pointer;margin-right:56px}
+.inner{position:relative;width:100%;height:100%;transition:transform .45s ease;transform-style:preserve-3d}
+.card.flip .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;padding:clamp(22px,5vw,34px);display:flex;flex-direction:column;gap:14px;overflow:hidden}
+.front{background:var(--card);color:var(--card-ink);border-top:6px solid var(--verde)}
+.back{background:var(--navy-2);color:var(--ink);transform:rotateY(180deg);border:1px solid var(--line);border-top:6px solid var(--lima)}
+.tag{font:700 11px var(--f);letter-spacing:.09em;text-transform:uppercase;color:var(--petroleo)}
+.back .tag{color:var(--lima)}
+.h{font:800 clamp(26px,6vw,36px)/1.1 var(--f);color:var(--verde-osc);margin:0;text-wrap:balance}
+.back .h{color:#fff;font-size:clamp(20px,4.5vw,26px)}
+.q{font:600 clamp(18px,4.4vw,22px)/1.4 var(--f);margin:auto 0;color:var(--card-ink)}
+.hint{font-size:13px;color:var(--card-muted);display:flex;justify-content:space-between}
+ul.pts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;flex:1;overflow:auto}
+ul.pts li{font-size:16px;line-height:1.45;padding-left:18px;position:relative;color:#e8eef5}
+ul.pts li::before{content:"";position:absolute;left:0;top:.6em;width:7px;height:7px;border-radius:50%;background:var(--verde)}
+.trap{border-left:3px solid var(--naranja);padding:8px 12px;background:rgba(255,144,21,.1);font-size:14px;line-height:1.4;border-radius:4px}
+.trap b{color:var(--naranja);font-weight:700}
+.status{position:absolute;top:14px;right:14px;font:700 11px var(--f);padding:3px 8px;border-radius:999px}
+.status.known{background:#eef7e3;color:#3f7f0a}.status.again{background:#fff1e0;color:#b35d00}
+.rail{position:absolute;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(40px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px;align-items:center}
+.rb{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;color:#fff;font:600 11px var(--f);cursor:pointer;padding:0}
+.rb span.ic{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.1);border:1px solid var(--line)}
+.rb svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.rb.ok span.ic{color:var(--verde)} .rb.ok.on span.ic{background:var(--verde);color:var(--navy);border-color:var(--verde)}
+.rb.ag span.ic{color:var(--naranja)} .rb.ag.on span.ic{background:var(--naranja);color:var(--navy);border-color:var(--naranja)}
+.rb.ai span.ic{color:var(--lima)} .rb.ai.on span.ic{background:var(--lima);color:var(--navy);border-color:var(--lima)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;background:#fff;color:var(--navy);font:700 13px var(--f);padding:10px 16px;border-radius:999px;box-shadow:0 6px 24px rgba(0,0,0,.3);max-width:calc(100% - 32px);text-align:center}
+.pbox{position:fixed;inset:0;z-index:50;background:rgba(10,34,64,.92);display:flex;align-items:center;justify-content:center;padding:16px}
+.pbox div{width:min(560px,100%);display:flex;flex-direction:column;gap:10px}
+.pbox p{margin:0;color:var(--muted);font-size:14px}
+.pbox textarea{width:100%;height:min(60vh,420px);font:13px/1.45 ui-monospace,Menlo,Consolas,monospace;padding:12px;border-radius:6px;border:1px solid var(--line);background:#fff;color:#222}
+button:focus-visible,a:focus-visible{outline:2px solid var(--lima);outline-offset:2px}
+.end{text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center;max-width:420px}
+.end h2{font:800 28px var(--f);color:var(--verde);margin:0}
+.end p{color:var(--muted);margin:0;line-height:1.5}
+.btn{font:700 14px var(--f);border:1px solid var(--verde);background:var(--verde);color:#fff;padding:10px 18px;border-radius:2px;cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.swipe{position:absolute;bottom:calc(10px + env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;font-size:12px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.inner{transition:none}}
+@media (max-width:420px){.nav{gap:12px} .nav .logo{width:44px} .nav .links{gap:12px} .nav a{font-size:13px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <nav class="nav" aria-label="Site">
+    <div class="logo" role="img" aria-label="ids"></div>
+    <div class="links"><a href="index.html">Simulator</a><a href="cards.html" aria-current="page">Study cards</a><a href="concepts.html">Concepts</a><a href="plan.html">Study plan</a></div>
+  </nav>
+  <div class="bar" id="bar"></div>
+</header>
+<main class="feed" id="feed" tabindex="0" aria-label="Study cards feed"></main>
+<script src="cards-data.js"></script>
+<script src="cards-es.js"></script>
+<script src="cards-ai.js"></script>
+<script>
+(function(){
+const store={get(k,d){try{const v=localStorage.getItem("kkc:"+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("kkc:"+k,JSON.stringify(v))}catch(e){}}};
+CARDS.forEach((c,i)=>c.id=i);
+let marks=store.get("marks",{}); // id -> "known" | "again"
+let filter="all", order=[], cur=0, shuffled=false;
+let lang=store.get("lang","en"); if(lang!=="en"&&lang!=="es") lang="en";
+const UI={en:{all:"All",review:"To review",tap:"Tap to reveal",answer:"answer",trap:"Exam trap:",flip:"Flip",got:"Got it",again:"Again",mix:"Shuffle",mixed:"Shuffled",known:"Known",ragain:"Review again",swipe:"Swipe up for the next card",kn:"known",end:"End of the deck",left:n=>n+" cards are not marked as known yet. Review them, then test yourself in the simulator.",done:"Every card is marked as known. Take a full mock exam to confirm.",pend:"Review pending cards",sim:"Open simulator",reset:"Reset card progress",confirm:"Tap again to confirm reset",ai:"Explain",copied:"Prompt copied. Paste it into your AI assistant.",manual:"Copy this prompt and paste it into your AI assistant.",close:"Close"},
+ es:{all:"Todas",review:"Por repasar",tap:"Toca para ver la respuesta",answer:"respuesta",trap:"Trampa del examen:",flip:"Voltear",got:"La sé",again:"Repasar",mix:"Mezclar",mixed:"Mezcladas",known:"La sé",ragain:"Por repasar",swipe:"Desliza hacia arriba para la siguiente",kn:"dominadas",end:"Fin del mazo",left:n=>n+" tarjetas aún no están marcadas como dominadas. Repásalas y luego mide tu avance en el simulador.",done:"Todas las tarjetas están dominadas. Haz un examen completo para confirmarlo.",pend:"Repasar pendientes",sim:"Abrir simulador",reset:"Reiniciar progreso de tarjetas",confirm:"Toca de nuevo para confirmar",ai:"Explicar",copied:"Prompt copiado. Pégalo en tu IA.",manual:"Copia este prompt y pégalo en tu IA.",close:"Cerrar"}};
+const T=()=>UI[lang];
+const tx=c=>{ if(lang==="es"&&CARDS_ES[c.id]){const e=CARDS_ES[c.id];return {h:e[0],q:e[1],p:e[2],t:e[3]};} return c; };
+const dn=d=>(lang==="es"?CARD_DOMAINS_ES:CARD_DOMAINS)[d];
+const feed=document.getElementById("feed"), bar=document.getElementById("bar");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ICON={
+ flip:'<svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg>',
+ ok:'<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg>',
+ ag:'<svg viewBox="0 0 24 24"><path d="M12 7v5l3 2"/><circle cx="12" cy="12" r="8"/></svg>',
+ mix:'<svg viewBox="0 0 24 24"><path d="M4 7h3l10 10h3M4 17h3l3-3M14 10l3-3h3M18 4l2 3-2 3M18 14l2 3-2 3"/></svg>',
+ ai:'<svg viewBox="0 0 24 24"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M18.5 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>'
+};
+function copyPrompt(id,btn){const c0=CARDS[id];KKAI.copyPrompt(KKAI.buildPrompt(tx(c0),dn(c0.d),lang),T(),btn);}
+function pool(){
+  let p=CARDS.filter(c=>filter==="all"||filter==="review"||c.d===filter);
+  if(filter==="review") p=p.filter(c=>marks[c.id]!=="known");
+  return p;
+}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function chips(){
+  const known=Object.values(marks).filter(v=>v==="known").length;
+  const items=[["all",T().all],["review",T().review]].concat(Object.keys(CARD_DOMAINS).map(k=>[k,dn(k)]));
+  bar.innerHTML=`<span class="lang" role="group" aria-label="Language"><button data-l="en" class="${lang==="en"?"on":""}">EN</button><button data-l="es" class="${lang==="es"?"on":""}">ES</button></span>`+items.map(([k,l])=>`<button class="chip ${filter===k?"on":""}" data-f="${k}">${esc(l)}</button>`).join("")+`<span class="count" id="count"></span>`;
+  bar.querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set("lang",lang);document.documentElement.lang=lang;const keep=cur;build();setTimeout(()=>{go(keep)},30);});
+  bar.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{filter=b.dataset.f;store.set("filter",filter);build();});
+  updateCount(known);
+}
+function updateCount(){
+  const known=Object.values(marks).filter(v=>v==="known").length;
+  const c=document.getElementById("count"); if(c) c.textContent=`${Math.min(cur+1,order.length)}/${order.length} · ${known}/${CARDS.length} ${T().kn}`;
+}
+function slide(c0,i){
+  const m=marks[c0.id]; const c=Object.assign({},tx(c0),{id:c0.id,d:c0.d});
+  return `<section class="slide" data-i="${i}">
+   <div class="card" data-id="${c.id}" role="button" tabindex="0" aria-label="Flip card: ${esc(c.h)}">
+    <div class="inner">
+     <div class="face front">${m?`<span class="status ${m}">${m==="known"?T().known:T().ragain}</span>`:""}
+      <span class="tag">${esc(dn(c.d))}</span>
+      <h2 class="h">${esc(c.h)}</h2>
+      <p class="q">${esc(c.q)}</p>
+      <p class="hint"><span>${T().tap}</span><span>${i+1}/${order.length}</span></p>
+     </div>
+     <div class="face back">
+      <span class="tag">${esc(dn(c.d))} · ${T().answer}</span>
+      <h2 class="h">${esc(c.h)}</h2>
+      <ul class="pts">${c.p.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+      ${c.t?`<p class="trap"><b>${T().trap}</b> ${esc(c.t)}</p>`:""}
+     </div>
+    </div>
+   </div>
+   <div class="rail">
+    <button class="rb" data-a="flip">${'<span class="ic">'+ICON.flip+'</span>'}${T().flip}</button>
+    <button class="rb ok ${m==="known"?"on":""}" data-a="known"><span class="ic">${ICON.ok}</span>${T().got}</button>
+    <button class="rb ag ${m==="again"?"on":""}" data-a="again"><span class="ic">${ICON.ag}</span>${T().again}</button>
+    <button class="rb ai" data-a="ai" aria-label="${T().ai}: ${esc(c.h)}"><span class="ic">${ICON.ai}</span>${T().ai}</button>
+    <button class="rb" data-a="mix"><span class="ic">${ICON.mix}</span>${shuffled?T().mixed:T().mix}</button>
+   </div>
+   ${i===0?'<p class="swipe">'+T().swipe+'</p>':""}
+  </section>`;
+}
+function endSlide(){
+  const left=CARDS.filter(c=>marks[c.id]!=="known").length;
+  return `<section class="slide"><div class="end"><h2>${T().end}</h2>
+   <p>${left?T().left(left):T().done}</p>
+   <div class="row"><button class="btn" id="again">${T().pend}</button><a class="btn ghost" href="index.html">${T().sim}</a></div>
+   <button class="btn ghost" id="reset">${T().reset}</button></div></section>`;
+}
+function build(){
+  const p=pool(); order=shuffled?shuffle(p):p; cur=0;
+  chips();
+  feed.innerHTML=(order.length?order.map(slide).join(""):"")+endSlide();
+  feed.scrollTop=0; wire(); updateCount();
+}
+function mark(id,val,btnSlide){
+  marks[id]=marks[id]===val?undefined:val; if(!marks[id]) delete marks[id];
+  store.set("marks",marks);
+  const s=btnSlide; s.querySelector('[data-a="known"]').classList.toggle("on",marks[id]==="known");
+  s.querySelector('[data-a="again"]').classList.toggle("on",marks[id]==="again");
+  const st=s.querySelector(".status"); const front=s.querySelector(".front");
+  if(st) st.remove();
+  if(marks[id]) front.insertAdjacentHTML("afterbegin",`<span class="status ${marks[id]}">${marks[id]==="known"?T().known:T().ragain}</span>`);
+  updateCount();
+  if(marks[id]) setTimeout(()=>go(+s.dataset.i+1),350);
+}
+function go(i){ const s=feed.querySelectorAll(".slide")[i]; if(s) s.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); }
+function wire(){
+  feed.querySelectorAll(".card").forEach(c=>{
+    c.onclick=()=>c.classList.toggle("flip");
+    c.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();c.classList.toggle("flip")}};
+  });
+  feed.querySelectorAll(".rb").forEach(b=>b.onclick=e=>{
+    e.stopPropagation(); const s=b.closest(".slide"); const card=s.querySelector(".card"); const id=+card.dataset.id;
+    const a=b.dataset.a;
+    if(a==="flip") card.classList.toggle("flip");
+    else if(a==="mix"){shuffled=!shuffled;build();}
+    else if(a==="ai") copyPrompt(id,b);
+    else mark(id,a,s);
+  });
+  const ag=document.getElementById("again"); if(ag) ag.onclick=()=>{filter="review";build();};
+  const rs=document.getElementById("reset"); if(rs) rs.onclick=()=>{ if(rs.dataset.armed){marks={};store.set("marks",marks);build();} else {rs.dataset.armed="1";rs.textContent=T().confirm;} };
+  const io=new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting && en.target.dataset.i!==undefined){ cur=+en.target.dataset.i; updateCount(); }}),{root:feed,threshold:.6});
+  feed.querySelectorAll(".slide[data-i]").forEach(s=>io.observe(s));
+}
+document.addEventListener("keydown",e=>{
+  if(e.target.closest && e.target.closest(".card,button,a")) { if(e.key!=="ArrowDown"&&e.key!=="ArrowUp") return; }
+  if(["ArrowDown","PageDown"," "].includes(e.key)){e.preventDefault();go(cur+1)}
+  else if(["ArrowUp","PageUp"].includes(e.key)){e.preventDefault();go(cur-1)}
+  else if(e.key==="f"||e.key==="Enter"){const c=feed.querySelectorAll(".card")[cur]; if(c){e.preventDefault();c.classList.toggle("flip")}}
+});
+filter=store.get("filter","all"); if(filter!=="all"&&filter!=="review"&&!CARD_DOMAINS[filter]) filter="all";
+document.documentElement.lang=lang;
+build();
+})();
+</script>
+</body>
+</html>

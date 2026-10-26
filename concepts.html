@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kong Konnect Concepts</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: reading glossary. Navy header, light content, sticky toolbar with language, search and domain chips. */
+:root{
+  --bg:#F5F5F5; --surface:#FFFFFF; --ink:#222222; --body:#3C3C3C; --muted:#5f6670; --line:#E3E3E3;
+  --verde:#76BC21; --verde-osc:#61A60E; --lima:#C2D500; --navy:#0A2240; --petroleo:#005677; --naranja:#FF9015;
+  --f:"Open Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  color-scheme:light;
+}
+*,::before,::after{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--body);font:15px/1.6 var(--f)}
+[hidden]{display:none!important}
+.top{background:var(--navy);padding-top:env(safe-area-inset-top,0px)}
+.nav{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:16px;height:56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.nav .logo{width:64px;height:28px;background:url(logo.png) left center/contain no-repeat;flex:none}
+.nav .links{display:flex;gap:16px;overflow-x:auto;scrollbar-width:none}
+.nav a{color:#b9c6d4;text-decoration:none;font-size:14px;font-weight:600;white-space:nowrap}
+.nav a[aria-current]{color:#fff;box-shadow:inset 0 -2px 0 var(--verde)}
+main{max-width:1080px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-right,0px)) 64px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:20px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--petroleo);margin:0 0 6px}
+h1{margin:0;font-size:clamp(28px,5vw,38px);font-weight:800;line-height:1.15;color:var(--navy)}
+.lede{margin:8px 0 0;max-width:68ch;font-size:16px;color:var(--ink)}
+.tools,.chips,.row1,.list{min-width:0;max-width:100%}
+.tools{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line)}
+.row1{display:flex;gap:10px;align-items:center}
+.lang{flex:none;display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface)}
+.lang button{font:700 12px var(--f);padding:7px 11px;border:0;background:transparent;color:var(--muted);cursor:pointer}
+.lang button.on{background:var(--navy);color:#fff}
+input[type=search]{flex:1;min-width:0;font:15px var(--f);padding:8px 12px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+.count{flex:none;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.chip{flex:none;font:600 12px var(--f);padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.chip.on{background:var(--verde);border-color:var(--verde);color:var(--navy)}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,460px),1fr));gap:14px;align-items:start}
+.c{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--verde);padding:18px 20px;display:flex;flex-direction:column;gap:10px;scroll-margin-top:150px;min-width:0}
+.c.hl{outline:2px solid var(--lima);outline-offset:2px}
+.tag{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--petroleo)}
+.c h2{margin:0;font-size:20px;font-weight:800;line-height:1.2;color:var(--verde-osc);text-wrap:balance}
+.c p{margin:0}
+.ex{background:#f0f5f8;border-left:3px solid var(--petroleo);padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.ex b{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--petroleo)}
+pre{margin:0;background:var(--navy);color:#e8eef5;padding:10px 12px;border-radius:4px;overflow-x:auto;font:12.5px/1.5 ui-monospace,Menlo,Consolas,monospace}
+.rel{font-size:13px;color:var(--muted)}
+.rel a{color:var(--petroleo);font-weight:600;text-decoration:none;margin-right:12px;display:inline-block;max-width:100%}
+.rel a:hover{text-decoration:underline}
+.ask{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;font:700 13px var(--f);padding:8px 14px;border:1px solid var(--navy);background:var(--navy);color:#fff;border-radius:2px;cursor:pointer}
+.ask svg{width:16px;height:16px;stroke:var(--lima);fill:none;stroke-width:1.8;stroke-linejoin:round}
+.ask.on{background:var(--lima);border-color:var(--lima);color:var(--navy)}
+.ask.on svg{stroke:var(--navy)}
+.empty{color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;background:var(--navy);color:#fff;font:700 13px var(--f);padding:10px 16px;border-radius:999px;box-shadow:0 6px 24px rgba(0,0,0,.25);max-width:calc(100% - 32px);text-align:center}
+.pbox{position:fixed;inset:0;z-index:50;background:rgba(10,34,64,.92);display:flex;align-items:center;justify-content:center;padding:16px}
+.pbox div{width:min(560px,100%);display:flex;flex-direction:column;gap:10px}
+.pbox p{margin:0;color:#dfe7ef;font-size:14px}
+.pbox textarea{width:100%;height:min(60vh,420px);font:13px/1.45 ui-monospace,Menlo,Consolas,monospace;padding:12px;border-radius:6px;border:0;background:#fff;color:#222}
+.btn{font:700 14px var(--f);border:1px solid var(--verde);background:var(--verde);color:#fff;padding:10px 18px;border-radius:2px;cursor:pointer}
+:focus-visible{outline:2px solid var(--verde);outline-offset:2px}
+footer{background:var(--navy);color:#cdd6e0;font-size:13px}
+footer div{max-width:1080px;margin:0 auto;padding:18px max(16px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+@media (max-width:420px){.nav{gap:12px} .nav .logo{width:44px} .nav .links{gap:12px} .nav a{font-size:13px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <nav class="nav" aria-label="Site">
+    <div class="logo" role="img" aria-label="ids"></div>
+    <div class="links"><a href="index.html">Simulator</a><a href="cards.html">Study cards</a><a href="concepts.html" aria-current="page">Concepts</a><a href="plan.html">Study plan</a></div>
+  </nav>
+</header>
+<main>
+  <section>
+    <p class="eyebrow">Kong Konnect Certified Associate</p>
+    <h1 id="t"></h1>
+    <p class="lede" id="lede"></p>
+  </section>
+  <div class="tools">
+    <div class="row1">
+      <span class="lang" role="group" aria-label="Language"><button data-l="en">EN</button><button data-l="es">ES</button></span>
+      <input type="search" id="q" autocomplete="off">
+      <span class="count" id="count"></span>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+  <div class="list" id="list"></div>
+  <p class="empty" id="empty" hidden></p>
+</main>
+<footer><div>ids · Investigación y Desarrollo de Sistemas · www.ids.com.mx</div></footer>
+<script src="concepts-1.js"></script>
+<script src="concepts-2.js"></script>
+<script src="concepts-3.js"></script>
+<script src="cards-ai.js"></script>
+<script>
+(function(){
+const store={get(k,d){try{const v=localStorage.getItem("kkc:"+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("kkc:"+k,JSON.stringify(v))}catch(e){}}};
+const DOM={en:{plat:"Platform",gw:"API Gateway",ops:"APIOps",ai:"AI Gateway",ev:"Event Gateway",id:"Identity",portal:"Dev Portal",cat:"Catalog",meter:"Metering",obs:"Observability",org:"Organizations"},
+ es:{plat:"Plataforma",gw:"API Gateway",ops:"APIOps",ai:"AI Gateway",ev:"Event Gateway",id:"Identity",portal:"Dev Portal",cat:"Catalog",meter:"Metering",obs:"Observabilidad",org:"Organizaciones"}};
+const UI={en:{t:"Concepts",lede:"Kong Konnect terms explained in plain language, each with an example. Use Explain this better to copy a study prompt for your AI assistant.",q:"Search a concept",all:"All",ex:"Example",rel:"Related:",ask:"Explain this better",of:"concepts",none:"No concept matches that search.",copied:"Prompt copied. Paste it into your AI assistant.",manual:"Copy this prompt and paste it into your AI assistant.",close:"Close"},
+ es:{t:"Conceptos",lede:"Términos de Kong Konnect explicados en lenguaje simple, cada uno con un ejemplo. Usa Explicar mejor para copiar un prompt de estudio para tu IA.",q:"Buscar un concepto",all:"Todos",ex:"Ejemplo",rel:"Relacionado:",ask:"Explicar mejor",of:"conceptos",none:"Ningún concepto coincide con esa búsqueda.",copied:"Prompt copiado. Pégalo en tu IA.",manual:"Copia este prompt y pégalo en tu IA.",close:"Cerrar"}};
+const C=window.CONCEPTS, byId={}; C.forEach(c=>byId[c.id]=c);
+let lang=store.get("lang","en"); if(lang!=="en"&&lang!=="es") lang="en";
+let dom=store.get("cdom","all"); if(dom!=="all"&&!DOM.en[dom]) dom="all";
+const T=()=>UI[lang], L=c=>c[lang];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const norm=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+const $=id=>document.getElementById(id);
+const SPARK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/></svg>';
+
+function prompt(c){
+  const [n,def,ex]=L(c), d=DOM[lang][c.d], rel=c.r.map(id=>L(byId[id])[0]).join(", ");
+  if(lang==="es") return `Actúa como instructor experto en Kong Konnect. Me estoy preparando para el examen Kong Konnect Certified Associate, que es de selección múltiple y en inglés.
+
+Concepto: ${n}
+Dominio del examen: ${d}
+Mi definición actual: ${def}
+Ejemplo que tengo: ${ex}
+Conceptos relacionados: ${rel}
+
+Quiero entender el concepto a fondo. Sigue este orden:
+1. Explícalo en lenguaje simple, en menos de 120 palabras, y luego con una analogía del mundo real.
+2. Ubícalo en la arquitectura de Konnect: con qué componentes interactúa y en qué momento del flujo participa. Incluye un diagrama sencillo en texto.
+3. Dame dos ejemplos: uno técnico con configuración mínima (YAML de decK, Admin API o pasos en la UI de Konnect) y uno de negocio en una empresa real como un banco o un retail.
+4. Diferéncialo de los conceptos relacionados y explica cómo suele aparecer en las preguntas del examen y qué confusiones busca provocar.
+5. Hazme 3 preguntas de práctica tipo examen, en inglés, con 4 opciones cada una y dificultad creciente. No muestres las respuestas: espera las mías, califícalas y explica por qué cada opción es correcta o incorrecta.
+6. Cierra con un resumen de 3 líneas para repasar.
+
+Toma como referencia la documentación oficial vigente de Kong (developer.konghq.com). Si algo cambió hace poco o no estás seguro, dilo en vez de suponer. Responde en español, pero deja en inglés los nombres de componentes, comandos y las preguntas de práctica.`;
+  return `Act as an expert Kong Konnect instructor. I am preparing for the Kong Konnect Certified Associate exam, which is multiple choice and in English.
+
+Concept: ${n}
+Exam domain: ${d}
+My current definition: ${def}
+Example I have: ${ex}
+Related concepts: ${rel}
+
+I want to understand this concept in depth. Follow this order:
+1. Explain it in plain language in under 120 words, then with a real-world analogy.
+2. Place it in the Konnect architecture: which components it interacts with and at what point of the flow it takes part. Include a simple text diagram.
+3. Give me two examples: a technical one with minimal configuration (decK YAML, Admin API or Konnect UI steps) and a business one in a real company such as a bank or a retailer.
+4. Tell it apart from the related concepts and explain how it usually shows up in exam questions and which confusions those questions try to cause.
+5. Give me 3 exam-style practice questions with 4 options each, increasing in difficulty. Do not show the answers: wait for mine, grade them and explain why each option is right or wrong.
+6. Close with a 3-line summary for review.
+
+Use the current official Kong documentation (developer.konghq.com) as your reference. If something changed recently or you are not sure, say so instead of guessing.`;
+}
+
+function chrome(){
+  document.documentElement.lang=lang;
+  document.title=lang==="es"?"Conceptos de Kong Konnect":"Kong Konnect Concepts";
+  $("t").textContent=T().t; $("lede").textContent=T().lede; $("q").placeholder=T().q; $("q").setAttribute("aria-label",T().q);
+  document.querySelectorAll("[data-l]").forEach(b=>b.classList.toggle("on",b.dataset.l===lang));
+  const ds=["all"].concat(Object.keys(DOM.en).filter(k=>C.some(c=>c.d===k)));
+  $("chips").innerHTML=ds.map(k=>`<button class="chip ${dom===k?"on":""}" data-d="${k}">${esc(k==="all"?T().all:DOM[lang][k])}</button>`).join("");
+  $("chips").querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{dom=b.dataset.d;store.set("cdom",dom);chrome();render();});
+}
+function card(c){
+  const [n,def,ex]=L(c);
+  return `<article class="c" id="c-${c.id}">
+   <span class="tag">${esc(DOM[lang][c.d])}</span>
+   <h2>${esc(n)}</h2>
+   <p>${esc(def)}</p>
+   <div class="ex"><b>${T().ex}</b><p>${esc(ex)}</p>${c.k?`<pre><code>${esc(c.k)}</code></pre>`:""}</div>
+   <p class="rel">${T().rel} ${c.r.map(id=>`<a href="#c-${id}" data-go="${id}">${esc(L(byId[id])[0])}</a>`).join("")}</p>
+   <button class="ask" data-ask="${c.id}">${SPARK}${T().ask}</button>
+  </article>`;
+}
+function render(){
+  const q=norm($("q").value.trim());
+  const shown=C.filter(c=>(dom==="all"||c.d===dom)&&(!q||norm(c.en.join(" ")+" "+c.es.join(" ")).includes(q)));
+  $("list").innerHTML=shown.map(card).join("");
+  $("count").textContent=`${shown.length}/${C.length} ${T().of}`;
+  $("empty").hidden=shown.length>0; $("empty").textContent=T().none;
+  $("list").querySelectorAll("[data-ask]").forEach(b=>b.onclick=()=>KKAI.copyPrompt(prompt(byId[b.dataset.ask]),T(),b));
+  $("list").querySelectorAll("[data-go]").forEach(a=>a.onclick=e=>{e.preventDefault();go(a.dataset.go);});
+}
+function go(id){
+  if(!document.getElementById("c-"+id)){dom="all";$("q").value="";store.set("cdom",dom);chrome();render();}
+  const el=document.getElementById("c-"+id); if(!el) return;
+  el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+  el.classList.add("hl"); setTimeout(()=>el.classList.remove("hl"),1600);
+  try{history.replaceState(null,"","#c-"+id)}catch(e){}
+}
+document.querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>{lang=b.dataset.l;store.set("lang",lang);chrome();render();});
+$("q").addEventListener("input",render);
+chrome(); render();
+if(location.hash.startsWith("#c-")) setTimeout(()=>go(location.hash.slice(3)),50);
+})();
+</script>
+</body>
+</html>
