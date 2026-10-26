@@ -1,0 +1,30 @@
+/* Shared look for every page: tokens, site nav, brand mark and legal footer.
+   Palette and type follow the public Kong brand guide (dark green, electric lime, bay grays,
+   Funnel Sans and Roboto Mono). No Kong logo or emblem is used: this is an independent study site. */
+:root{
+  --dark:#000F06; --dark-2:#0E1A12; --lime:#CCFF00; --lime-soft:#F2FFCC; --bay:#B7BDB5;
+  --g50:#E7EDE5; --g100:#D7DED4; --g300:#B7BDB5; --g500:#858983; --g600:#676B66; --g700:#4A4D49; --g800:#2D2E2C; --g900:#101110;
+  --bg:#F4F6F3; --surface:#FFFFFF; --ink:#101110; --body:#2D2E2C; --muted:#5C605B; --line:#D7DED4;
+  --ok:#2E7412; --ok-soft:#E9F5DF; --bad:#B4352F; --bad-soft:#F8E4E2; --warn:#9A5B00; --warn-soft:#FFF3DC;
+  --grid:rgba(204,255,0,.07);
+  --f:"Funnel Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --f-mono:"Roboto Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+/* Blueprint grid used on dark surfaces */
+.blueprint{background-color:var(--dark);background-image:radial-gradient(60% 80% at 100% 0%,rgba(204,255,0,.12),transparent 70%),linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:auto,40px 40px,40px 40px}
+
+.sitenav{background:var(--dark);border-bottom:1px solid rgba(204,255,0,.18);padding-top:env(safe-area-inset-top,0px)}
+.sitenav nav{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:20px;height:52px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.brand{display:flex;align-items:center;gap:8px;flex:none;color:#fff;text-decoration:none;font:700 15px var(--f);letter-spacing:-.01em;white-space:nowrap}
+.brand::before{content:"";width:12px;height:12px;background:var(--lime);transform:rotate(45deg)}
+.sitenav .links{display:flex;gap:16px;overflow-x:auto;scrollbar-width:none}
+.sitenav .links::-webkit-scrollbar{display:none}
+.sitenav a.l{color:var(--bay);text-decoration:none;font:600 14px var(--f);white-space:nowrap;padding:15px 0}
+.sitenav a.l:hover{color:#fff}
+.sitenav a.l[aria-current]{color:#fff;box-shadow:inset 0 -2px 0 var(--lime)}
+@media (max-width:520px){.brand span{display:none} .sitenav nav{gap:14px} .sitenav .links{gap:12px} .sitenav a.l{font-size:13px}}
+
+.legal{background:var(--dark);color:var(--bay);font:12px/1.55 var(--f)}
+.legal div{max-width:1080px;margin:0 auto;padding:18px max(16px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:6px}
+.legal b{color:#fff;font-weight:700}
+.legal a{color:var(--lime)}

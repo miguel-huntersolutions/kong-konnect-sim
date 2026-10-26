@@ -9,6 +9,9 @@ const MODES = {
 const $ = s => document.querySelector(s);
 const app = $("#app");
 BANK.forEach((q,i)=>{ q.id = i; });
+// Saved data refers to questions by position. Drop anything the current bank cannot serve.
+const validItem = it => it && BANK[it.id] && Array.isArray(it.order) && it.order.length===BANK[it.id].o.length && Array.isArray(it.pick);
+const validSession = s => s && MODES[s.mode] && Array.isArray(s.items) && s.items.length>0 && s.items.every(validItem) && s.cur>=0 && s.cur<s.items.length;
 
 const store = {
   get(k, d){ try { const v = localStorage.getItem("kks:"+k); return v ? JSON.parse(v) : d; } catch(e){ return d; } },
@@ -42,7 +45,7 @@ function buildSession(mode, opts){
   if (mode==="mock") qs = pickMock(MODES.mock.n);
   else if (mode==="practice") qs = shuffle(BANK).slice(0, MODES.practice.n);
   else if (mode==="drill") qs = shuffle(BANK.filter(q=>q.d===opts.domain));
-  else { const m = new Set(store.get("missed", [])); qs = shuffle(BANK.filter(q=>m.has(q.id))); }
+  else { const m = new Set(getMissed()); qs = shuffle(BANK.filter(q=>m.has(q.id))); }
   return {
     mode, domain: opts && opts.domain, started: Date.now(),
     deadline: MODES[mode].minutes ? Date.now() + MODES[mode].minutes*60000 : 0,
@@ -52,22 +55,23 @@ function buildSession(mode, opts){
 }
 
 let S = null, timer = null;
+function getMissed(){ const m = store.get("missed", []); return Array.isArray(m) ? m.filter(id=>BANK[id]) : []; }
+function getSession(){ const s = store.get("session", null); if (validSession(s)) return s; if (s) store.set("session", null); return null; }
 function save(){ if (S && !S.done) store.set("session", S); else store.set("session", null); }
 
 // ---------- Home ----------
 function home(){
   clearInterval(timer);
-  const hist = store.get("history", []);
-  const missed = store.get("missed", []);
-  const resume = store.get("session", null);
+  let hist = store.get("history", []); if (!Array.isArray(hist)) hist = [];
+  const missed = getMissed();
+  const resume = getSession();
   const last = hist.slice(-8).reverse();
   const domOpts = Object.keys(DOMAINS).map(k=>`<option value="${k}">${esc(DOMAINS[k].name)} (${BANK.filter(q=>q.d===k).length})</option>`).join("");
   app.innerHTML = `
-  <header class="mast">
-    <div class="logo" role="img" aria-label="ids"></div>
+  <header class="mast blueprint">
     <p class="eyebrow">Unofficial practice simulator</p>
     <h1>Kong Konnect Certified Associate</h1>
-    <p class="sub">Exam readiness for the ids Kong team</p>
+    <p class="sub">Practice exams, domain drills and hands-on labs</p>
     <p class="lede">${BANK.length} scenario questions mapped to the October 2026 exam outline. The mock exam uses 60 questions, 120 minutes and a 75% pass mark. Questions are written from Kong documentation; they are not real exam items.</p>
   </header>
   ${resume ? `<div class="resume"><span>You have an unfinished ${esc(MODES[resume.mode].label.toLowerCase())}, question ${resume.cur+1} of ${resume.items.length}.</span><span class="row"><button class="btn" id="resume">Resume</button><button class="btn ghost" id="discard">Discard</button></span></div>` : ""}
@@ -111,14 +115,14 @@ function home(){
     <p class="muted">The real exam may include performance-based lab tasks. Do these in a Konnect trial; the simulator cannot grade them.</p>
     <div class="drills">${DRILLS.map((d,i)=>`<details class="drill"><summary><span class="dn">${i+1}</span>${esc(d.t)}</summary><p>${esc(d.s)}</p>${d.c?`<pre><code>${esc(d.c)}</code></pre>`:""}</details>`).join("")}</div>
   </section>
-  <footer class="foot"><div class="flogo" role="img" aria-label="ids"></div><span class="sig">ids · Investigación y Desarrollo de Sistemas · www.ids.com.mx</span><span>Sources: <a href="https://konghq.com/academy/konnect-certification" target="_blank" rel="noopener">exam page</a> · <a href="https://developer.konghq.com" target="_blank" rel="noopener">Kong docs</a> · <a href="https://app.trueability.com/ecommerce/kong-konnect-associate" target="_blank" rel="noopener">book the exam</a></span></footer>`;
+`;
   app.querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>{
     const mode = b.dataset.start;
     S = buildSession(mode, { domain: $("#dsel").value });
     if (!S.items.length) return;
-    save(); exam();
+    save(); exam(true);
   });
-  const r = $("#resume"); if (r) r.onclick = ()=>{ S = resume; exam(); };
+  const r = $("#resume"); if (r) r.onclick = ()=>{ S = resume; if (S.deadline && S.deadline<=Date.now()) finish(true); else exam(true); };
   const dd = $("#discard"); if (dd) dd.onclick = ()=>{ store.set("session", null); home(); };
   window.scrollTo(0,0);
 }
@@ -127,7 +131,7 @@ function home(){
 function fmt(ms){ ms=Math.max(0,ms); const t=Math.floor(ms/1000); const h=Math.floor(t/3600), m=Math.floor(t%3600/60), s=t%60; return (h?h+":":"")+String(m).padStart(h?2:1,"0")+":"+String(s).padStart(2,"0"); }
 function isRight(it){ const q=BANK[it.id]; return it.pick.length===q.a.length && q.a.every(a=>it.pick.includes(a)); }
 
-function exam(){
+function exam(moved){
   const M = MODES[S.mode];
   const it = S.items[S.cur], q = BANK[it.id];
   const multi = q.a.length > 1;
@@ -135,7 +139,7 @@ function exam(){
   const showFb = M.feedback && it.checked;
   app.innerHTML = `
   <div class="bar-top">
-    <button class="btn link" id="quit">Exit</button>
+    <button class="btn link" id="quit">Save and exit</button>
     <span class="mlabel">${esc(M.label)}${S.domain && S.mode==="drill" ? " · "+esc(DOMAINS[S.domain].name):""}</span>
     <span class="prog">${answered}/${S.items.length} answered</span>
     ${S.deadline ? `<span class="clock" id="clock" aria-live="off">${fmt(S.deadline-Date.now())}</span>`:""}
@@ -175,14 +179,15 @@ function exam(){
 
   app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
     const o = +b.dataset.o;
-    if (multi){ it.pick = it.pick.includes(o) ? it.pick.filter(x=>x!==o) : (it.pick.length<q.a.length ? it.pick.concat(o) : it.pick); }
+    // Multi-answer: at the limit, a new pick replaces the oldest one instead of being ignored.
+    if (multi){ it.pick = it.pick.includes(o) ? it.pick.filter(x=>x!==o) : it.pick.concat(o).slice(-q.a.length); }
     else it.pick = [o];
     save(); exam();
   });
-  app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{ S.cur=+b.dataset.go; save(); exam(); });
+  app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{ S.cur=+b.dataset.go; save(); exam(true); });
   const on=(id,f)=>{ const e=$("#"+id); if(e) e.onclick=f; };
-  on("prev", ()=>{ S.cur--; save(); exam(); });
-  on("next", ()=>{ S.cur++; save(); exam(); });
+  on("prev", ()=>{ S.cur--; save(); exam(true); });
+  on("next", ()=>{ S.cur++; save(); exam(true); });
   on("flag", ()=>{ it.flag=!it.flag; save(); exam(); });
   on("check", ()=>{ it.checked=true; trackMiss(it); save(); exam(); });
   on("finish", ()=> M.feedback ? finish() : reviewSubmit());
@@ -197,17 +202,18 @@ function exam(){
       if (left<=0){ clearInterval(timer); finish(true); }
     }, 1000);
   }
-  window.scrollTo(0,0);
+  if (moved) window.scrollTo(0,0);
 }
 
 function trackMiss(it){
-  const m = new Set(store.get("missed", []));
+  const m = new Set(getMissed());
   if (isRight(it)) m.delete(it.id); else m.add(it.id);
   store.set("missed", [...m]);
 }
 
 function reviewSubmit(){
   const un = S.items.filter(x=>!x.pick.length).length, fl = S.items.filter(x=>x.flag).length;
+  window.scrollTo(0,0);
   app.innerHTML = `
   <div class="confirm">
     <h2>Submit the exam?</h2>
@@ -215,8 +221,8 @@ function reviewSubmit(){
     <div class="grid big">${S.items.map((x,i)=>`<button class="cell ${x.pick.length?"a":""} ${x.flag?"f":""}" data-go="${i}">${i+1}</button>`).join("")}</div>
     <div class="actions"><button class="btn ghost" id="back">Back to questions</button><button class="btn" id="submit">Submit exam</button></div>
   </div>`;
-  app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{ S.cur=+b.dataset.go; exam(); });
-  $("#back").onclick = ()=>exam();
+  app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{ S.cur=+b.dataset.go; save(); exam(true); });
+  $("#back").onclick = ()=>exam(true);
   $("#submit").onclick = ()=>finish();
 }
 
@@ -224,12 +230,13 @@ function reviewSubmit(){
 function finish(timeUp){
   clearInterval(timer);
   S.done = true;
-  if (!MODES[S.mode].feedback) S.items.forEach(trackMiss);
+  // Mock: every question counts. Feedback modes: checked ones were tracked already, add answered-but-unchecked ones.
+  S.items.forEach(x=>{ if (!MODES[S.mode].feedback || (x.pick.length && !x.checked)) trackMiss(x); });
   const total = S.items.length, right = S.items.filter(isRight).length;
   const score = Math.round(right/total*100);
   const byD = {};
   S.items.forEach(x=>{ const d=BANK[x.id].d; byD[d]=byD[d]||{r:0,n:0}; byD[d].n++; if(isRight(x)) byD[d].r++; });
-  const hist = store.get("history", []);
+  let hist = store.get("history", []); if (!Array.isArray(hist)) hist = [];
   hist.push({ at: Date.now(), label: MODES[S.mode].label + (S.mode==="drill" ? ": "+DOMAINS[S.domain].name : ""), score, mins: Math.round((Date.now()-S.started)/60000) });
   store.set("history", hist.slice(-50));
   store.set("session", null);
@@ -256,7 +263,7 @@ function finish(timeUp){
   </section>`;
   $("#home").onclick = home;
   const mode = S.mode, dom = S.domain;
-  $("#again").onclick = ()=>{ S = buildSession(mode, {domain:dom}); if(!S.items.length){ home(); return; } save(); exam(); };
+  $("#again").onclick = ()=>{ S = buildSession(mode, {domain:dom}); if(!S.items.length){ home(); return; } save(); exam(true); };
   app.querySelectorAll("[data-f]").forEach(c=>c.onclick=()=>{
     app.querySelectorAll("[data-f]").forEach(x=>x.classList.toggle("on", x===c));
     app.querySelectorAll(".review > li").forEach(li=>li.hidden = c.dataset.f==="wrong" && li.classList.contains("rk"));

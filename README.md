@@ -1,6 +1,6 @@
-# Kong Konnect Associate: sitio de estudio
+# Gateway Prep: sitio de estudio para Kong Konnect Associate
 
-Sitio estático para preparar la certificación Kong Konnect Certified Associate. Está publicado en https://kong-konnect-sim-ids.vercel.app.
+Gateway Prep es un sitio estático independiente para preparar la certificación Kong Konnect Certified Associate. Está publicado en https://kong-konnect-sim-ids.vercel.app.
 
 ## Secciones
 
@@ -18,7 +18,12 @@ Sitio estático para preparar la certificación Kong Konnect Certified Associate
 - `cards-data.js` (inglés) y `cards-es.js` (español): contenido de las tarjetas, en el mismo orden.
 - `concepts-1.js`, `concepts-2.js`, `concepts-3.js`: contenido de los conceptos, cada uno en inglés y español.
 - `cards-ai.js`: arma el prompt de estudio y lo copia al portapapeles. Lo usan las tarjetas y los conceptos.
-- `logo.png`, `favicon.png`: marca ids.
+- `brand.css`: colores, tipografía, barra de navegación y pie legal compartidos por todas las páginas.
+- `favicon.svg`: ícono de Gateway Prep.
+
+## Marca y uso de Kong
+
+El estilo visual toma la paleta y la tipografía de la guía pública de marca de Kong (verde oscuro `#000F06`, Electric Lime `#CCFF00`, grises Bay, Funnel Sans y Roboto Mono). No usa el logo, el emblema ni los taglines de Kong, y la marca del sitio es Gateway Prep para no sugerir que es un producto oficial. Cada página lleva un aviso de que el sitio no está afiliado, patrocinado ni respaldado por Kong Inc. Si se cambia el diseño, conviene mantener esas tres reglas.
 
 El sitio no tiene build. Cada archivo se sirve tal cual.
 

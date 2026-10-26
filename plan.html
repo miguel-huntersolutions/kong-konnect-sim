@@ -3,64 +3,54 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Plan Konnect Associate</title>
-<link rel="icon" type="image/png" href="favicon.png">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<title>Plan de estudio · Gateway Prep</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Sans:wght@400;600;700;800&family=Roboto+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="brand.css">
 <style>
-/* Layout: documento de lectura, navy en encabezado, contenido claro con títulos verdes. */
-:root{
-  --bg:#F5F5F5; --surface:#FFFFFF; --ink:#222222; --body:#3C3C3C; --muted:#5f6670; --line:#E3E3E3;
-  --verde:#76BC21; --verde-osc:#61A60E; --lima:#C2D500; --navy:#0A2240; --petroleo:#005677; --naranja:#FF9015;
-  --f:"Open Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
-  color-scheme:light;
-}
+/* Layout: documento de lectura, encabezado oscuro, contenido claro. */
+:root{color-scheme:light}
 *,::before,::after{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--body);font:15px/1.6 var(--f)}
-.top{background:var(--navy);padding-top:env(safe-area-inset-top,0px)}
-.nav{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:16px;height:56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.nav .logo{width:64px;height:28px;background:url(logo.png) left center/contain no-repeat;flex:none}
-.nav .links{display:flex;gap:16px;overflow-x:auto}
-.nav a{color:#b9c6d4;text-decoration:none;font-size:14px;font-weight:600;white-space:nowrap}
-.nav a[aria-current]{color:#fff;box-shadow:inset 0 -2px 0 var(--verde)}
+body{background:var(--bg);color:var(--body);font:15px/1.6 var(--f);display:flex;flex-direction:column;min-height:100vh}
+main{flex:1;width:100%}
 main{max-width:860px;margin:0 auto;padding-block:32px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:32px}
 h1,h2{margin:0;font-weight:800;line-height:1.15;text-wrap:balance}
-h1{font-size:clamp(28px,5vw,38px);color:var(--navy)}
-h2{font-size:21px;color:var(--verde-osc);margin-bottom:10px}
+h1{font-size:clamp(28px,5vw,38px);color:var(--ink);letter-spacing:-.02em}
+h2{font-size:21px;color:var(--ink);margin-bottom:10px}
 p{margin:0 0 10px;max-width:68ch}
 .lede{font-size:17px;color:var(--ink)}
-.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--petroleo);margin-bottom:6px}
+.eyebrow{font:500 12px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--g700);margin-bottom:6px}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px}
-.kpi{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--verde);padding:14px 16px}
-.kpi b{display:block;font-size:26px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+.kpi{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--dark);padding:14px 16px}
+.kpi b{display:block;font-size:26px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
 .kpi span{font-size:13px;color:var(--muted)}
 .tw{overflow-x:auto;background:var(--surface);border:1px solid var(--line)}
 table{width:100%;border-collapse:collapse;font-size:14px;min-width:620px}
-th{background:var(--navy);color:#fff;text-align:left;font-weight:600;padding:9px 10px}
+th{background:var(--dark);color:#fff;text-align:left;font-weight:600;padding:9px 10px}
 td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:top}
-tr.ex td{background:#fff6ea;font-weight:600}
-td.n{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--petroleo);font-weight:700}
+tr.ex td{background:var(--lime-soft);font-weight:700}
+td.n{font:500 13px var(--f-mono);white-space:nowrap;color:var(--g700)}
 .gap{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px}
-.gap.no{background:#f8e4e2;color:#b4352f}.gap.par{background:#fff1e0;color:#a35400}.gap.ok{background:#eef7e3;color:#3f7f0a}
+.gap.no{background:var(--bad-soft);color:var(--bad)}.gap.par{background:var(--warn-soft);color:var(--warn)}.gap.ok{background:var(--ok-soft);color:var(--ok)}
 ul.check{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
 ul.check li{display:flex;gap:10px;align-items:flex-start}
-ul.check input{margin-top:5px;accent-color:var(--verde);width:16px;height:16px;flex:none}
-.note{border-left:3px solid var(--naranja);background:#fff6ea;padding:10px 14px}
+ul.check input{margin-top:5px;accent-color:var(--dark);width:16px;height:16px;flex:none}
+.note{border-left:3px solid var(--warn);background:var(--warn-soft);padding:10px 14px}
 .cta{display:flex;gap:10px;flex-wrap:wrap}
-.btn{font:700 14px var(--f);border:1px solid var(--verde);background:var(--verde);color:#fff;padding:10px 18px;border-radius:2px;text-decoration:none}
-.btn.ghost{background:transparent;color:var(--petroleo);border-color:var(--petroleo)}
-a{color:var(--petroleo)}
-footer{background:var(--navy);color:#cdd6e0;font-size:13px}
-footer div{max-width:1080px;margin:0 auto;padding:18px max(16px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
-:focus-visible{outline:2px solid var(--verde);outline-offset:2px}
-@media (max-width:420px){.nav{gap:12px} .nav .logo{width:44px} .nav .links{gap:12px} .nav a{font-size:13px}}
+.btn{font:700 14px var(--f);border:1px solid var(--dark);background:var(--dark);color:var(--lime);padding:10px 18px;border-radius:4px;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--g500)}
+a{color:var(--ink);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--g800);outline-offset:2px}
 </style>
 </head>
 <body>
-<header class="top">
-  <nav class="nav" aria-label="Sitio">
-    <div class="logo" role="img" aria-label="ids"></div>
-    <div class="links"><a href="index.html">Simulator</a><a href="cards.html">Study cards</a><a href="concepts.html">Concepts</a><a href="plan.html" aria-current="page">Study plan</a></div>
+<header class="sitenav">
+  <nav aria-label="Sitio">
+    <a class="brand" href="index.html" aria-label="Gateway Prep home"><span>Gateway Prep</span></a>
+    <div class="links"><a class="l" href="index.html">Simulator</a><a class="l" href="cards.html">Study cards</a><a class="l" href="concepts.html">Concepts</a><a class="l" href="plan.html" aria-current="page">Study plan</a></div>
   </nav>
 </header>
 <main>
@@ -156,7 +146,7 @@ footer div{max-width:1080px;margin:0 auto;padding:18px max(16px,env(safe-area-in
   <p><a href="https://konghq.com/academy/konnect-certification" target="_blank" rel="noopener">Página oficial de la certificación</a> · <a href="https://education.konghq.com" target="_blank" rel="noopener">Kong Academy</a> · <a href="https://app.trueability.com/ecommerce/kong-konnect-associate" target="_blank" rel="noopener">Reserva del examen</a> · <a href="https://developer.konghq.com/konnect/" target="_blank" rel="noopener">Documentación de Konnect</a></p>
 </section>
 </main>
-<footer><div>ids · Investigación y Desarrollo de Sistemas · www.ids.com.mx</div></footer>
+<footer class="legal"><div><span><b>Gateway Prep</b> · Material de estudio independiente para el examen Kong Konnect Certified Associate.</span><span>No está afiliado, patrocinado ni respaldado por Kong Inc. Kong y Kong Konnect son marcas de Kong Inc.</span></div></footer>
 <script>
 document.querySelectorAll('#lab input').forEach(function(cb){
   try{ cb.checked = localStorage.getItem('kkp:'+cb.id)==='1'; }catch(e){}

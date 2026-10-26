@@ -3,36 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Konnect Study Cards</title>
-<link rel="icon" type="image/png" href="favicon.png">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<title>Study cards · Gateway Prep</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Sans:wght@400;600;700;800&family=Roboto+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="brand.css">
 <style>
-/* Layout: full-height vertical feed, one card per screen, scroll-snap. Dark brand surface (navy) by choice. */
-:root{
-  --navy:#0A2240; --navy-2:#11305a; --petroleo:#005677; --verde:#76BC21; --verde-osc:#61A60E; --lima:#C2D500;
-  --naranja:#FF9015; --ink:#ffffff; --muted:#b9c6d4; --line:rgba(255,255,255,.14);
-  --card:#ffffff; --card-ink:#222222; --card-body:#3C3C3C; --card-muted:#5f6670;
-  --f:"Open Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
-  color-scheme:dark;
-}
+/* Layout: full-height vertical feed, one card per screen, scroll-snap. Dark blueprint surface. */
+:root{--amber:#FFB547;color-scheme:dark}
 *,::before,::after{box-sizing:border-box}
-html,body{margin:0;height:100%;background:var(--navy);color:var(--ink);font-family:var(--f)}
+html,body{margin:0;height:100%;background:var(--dark);color:#fff;font-family:var(--f)}
 [hidden]{display:none!important}
-.top{position:fixed;inset:0 0 auto;z-index:20;padding-top:env(safe-area-inset-top,0px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));background:linear-gradient(var(--navy) 70%,rgba(10,34,64,0))}
+.top{position:fixed;inset:0 0 auto;z-index:20;padding-top:env(safe-area-inset-top,0px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));background:linear-gradient(var(--dark) 70%,rgba(0,15,6,0))}
 .nav{display:flex;align-items:center;gap:16px;height:52px}
-.nav .logo{width:64px;height:28px;background:url(logo.png) left center/contain no-repeat;flex:none}
-.nav a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;white-space:nowrap}
-.nav a[aria-current]{color:var(--ink);box-shadow:inset 0 -2px 0 var(--verde)}
-.nav .links{display:flex;gap:16px;overflow-x:auto}
+.nav a.l{color:var(--bay);text-decoration:none;font-size:14px;font-weight:600;white-space:nowrap;padding:15px 0}
+.nav a.l[aria-current]{color:#fff;box-shadow:inset 0 -2px 0 var(--lime)}
+.nav .links{display:flex;gap:16px;overflow-x:auto;scrollbar-width:none}
 .bar{display:flex;align-items:center;gap:8px;padding-bottom:10px;overflow-x:auto;scrollbar-width:none}
 .bar::-webkit-scrollbar{display:none}
-.chip{flex:none;font:600 12px var(--f);padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
-.chip.on{background:var(--verde);border-color:var(--verde);color:var(--navy)}
-.lang{flex:none;display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
-.lang button{font:700 12px var(--f);padding:6px 10px;border:0;background:transparent;color:var(--muted);cursor:pointer}
-.lang button.on{background:#fff;color:var(--navy)}
-.count{flex:none;font:700 12px var(--f);color:var(--lima);margin-left:auto;padding-left:8px;font-variant-numeric:tabular-nums}
-.feed{height:100%;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior:contain;scrollbar-width:none}
+.chip{flex:none;font:600 12px var(--f);padding:6px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:transparent;color:var(--bay);cursor:pointer}
+.chip.on{background:var(--lime);border-color:var(--lime);color:var(--dark)}
+.lang{flex:none;display:flex;border:1px solid rgba(255,255,255,.18);border-radius:999px;overflow:hidden}
+.lang button{font:700 12px var(--f);padding:6px 10px;border:0;background:transparent;color:var(--bay);cursor:pointer}
+.lang button.on{background:#fff;color:var(--dark)}
+.count{flex:none;font:500 12px var(--f-mono);color:var(--lime);margin-left:auto;padding-left:8px;font-variant-numeric:tabular-nums}
+.feed{height:100%;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:40px 40px;background-attachment:local;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior:contain;scrollbar-width:none}
 .feed::-webkit-scrollbar{display:none}
 .slide{height:100dvh;height:100vh;scroll-snap-align:start;scroll-snap-stop:always;display:flex;align-items:center;justify-content:center;padding:120px max(16px,env(safe-area-inset-right,0px)) calc(28px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));position:relative}
 @supports(height:100dvh){.slide{height:100dvh}}
@@ -40,50 +36,51 @@ html,body{margin:0;height:100%;background:var(--navy);color:var(--ink);font-fami
 .inner{position:relative;width:100%;height:100%;transition:transform .45s ease;transform-style:preserve-3d}
 .card.flip .inner{transform:rotateY(180deg)}
 .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;padding:clamp(22px,5vw,34px);display:flex;flex-direction:column;gap:14px;overflow:hidden}
-.front{background:var(--card);color:var(--card-ink);border-top:6px solid var(--verde)}
-.back{background:var(--navy-2);color:var(--ink);transform:rotateY(180deg);border:1px solid var(--line);border-top:6px solid var(--lima)}
-.tag{font:700 11px var(--f);letter-spacing:.09em;text-transform:uppercase;color:var(--petroleo)}
-.back .tag{color:var(--lima)}
-.h{font:800 clamp(26px,6vw,36px)/1.1 var(--f);color:var(--verde-osc);margin:0;text-wrap:balance}
+.front{background:#fff;color:var(--ink);border-top:6px solid var(--lime)}
+.back{background:var(--dark-2);color:#fff;transform:rotateY(180deg);border:1px solid rgba(204,255,0,.2);border-top:6px solid var(--lime)}
+.tag{font:500 11px var(--f-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--g700)}
+.back .tag{color:var(--lime)}
+.h{font:800 clamp(26px,6vw,36px)/1.1 var(--f);color:var(--ink);letter-spacing:-.01em;margin:0;text-wrap:balance}
 .back .h{color:#fff;font-size:clamp(20px,4.5vw,26px)}
-.q{font:600 clamp(18px,4.4vw,22px)/1.4 var(--f);margin:auto 0;color:var(--card-ink)}
-.hint{font-size:13px;color:var(--card-muted);display:flex;justify-content:space-between}
+.q{font:600 clamp(18px,4.4vw,22px)/1.4 var(--f);margin:auto 0;color:var(--ink)}
+.hint{font-size:13px;color:var(--muted);display:flex;justify-content:space-between}
 ul.pts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;flex:1;overflow:auto}
-ul.pts li{font-size:16px;line-height:1.45;padding-left:18px;position:relative;color:#e8eef5}
-ul.pts li::before{content:"";position:absolute;left:0;top:.6em;width:7px;height:7px;border-radius:50%;background:var(--verde)}
-.trap{border-left:3px solid var(--naranja);padding:8px 12px;background:rgba(255,144,21,.1);font-size:14px;line-height:1.4;border-radius:4px}
-.trap b{color:var(--naranja);font-weight:700}
+ul.pts li{font-size:16px;line-height:1.45;padding-left:18px;position:relative;color:var(--g50)}
+ul.pts li::before{content:"";position:absolute;left:0;top:.6em;width:7px;height:7px;background:var(--lime)}
+.trap{border-left:3px solid var(--amber);padding:8px 12px;background:rgba(255,181,71,.1);font-size:14px;line-height:1.4;border-radius:4px}
+.trap b{color:var(--amber);font-weight:700}
 .status{position:absolute;top:14px;right:14px;font:700 11px var(--f);padding:3px 8px;border-radius:999px}
-.status.known{background:#eef7e3;color:#3f7f0a}.status.again{background:#fff1e0;color:#b35d00}
+.status.known{background:var(--ok-soft);color:var(--ok)}.status.again{background:var(--warn-soft);color:var(--warn)}
 .rail{position:absolute;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(40px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px;align-items:center}
 .rb{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;color:#fff;font:600 11px var(--f);cursor:pointer;padding:0}
-.rb span.ic{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.1);border:1px solid var(--line)}
+.rb span.ic{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(0,15,6,.7);border:1px solid rgba(255,255,255,.18)}
 .rb svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.rb.ok span.ic{color:var(--verde)} .rb.ok.on span.ic{background:var(--verde);color:var(--navy);border-color:var(--verde)}
-.rb.ag span.ic{color:var(--naranja)} .rb.ag.on span.ic{background:var(--naranja);color:var(--navy);border-color:var(--naranja)}
-.rb.ai span.ic{color:var(--lima)} .rb.ai.on span.ic{background:var(--lima);color:var(--navy);border-color:var(--lima)}
-.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;background:#fff;color:var(--navy);font:700 13px var(--f);padding:10px 16px;border-radius:999px;box-shadow:0 6px 24px rgba(0,0,0,.3);max-width:calc(100% - 32px);text-align:center}
-.pbox{position:fixed;inset:0;z-index:50;background:rgba(10,34,64,.92);display:flex;align-items:center;justify-content:center;padding:16px}
+.rb.ok span.ic{color:var(--lime)} .rb.ok.on span.ic{background:var(--lime);color:var(--dark);border-color:var(--lime)}
+.rb.ag span.ic{color:var(--amber)} .rb.ag.on span.ic{background:var(--amber);color:var(--dark);border-color:var(--amber)}
+.rb.ai span.ic{color:#fff} .rb.ai.on span.ic{background:#fff;color:var(--dark);border-color:#fff}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;background:var(--lime);color:var(--dark);font:700 13px var(--f);padding:10px 16px;border-radius:999px;box-shadow:0 6px 24px rgba(0,0,0,.3);max-width:calc(100% - 32px);text-align:center}
+.pbox{position:fixed;inset:0;z-index:50;background:rgba(0,15,6,.94);display:flex;align-items:center;justify-content:center;padding:16px}
 .pbox div{width:min(560px,100%);display:flex;flex-direction:column;gap:10px}
-.pbox p{margin:0;color:var(--muted);font-size:14px}
-.pbox textarea{width:100%;height:min(60vh,420px);font:13px/1.45 ui-monospace,Menlo,Consolas,monospace;padding:12px;border-radius:6px;border:1px solid var(--line);background:#fff;color:#222}
-button:focus-visible,a:focus-visible{outline:2px solid var(--lima);outline-offset:2px}
+.pbox p{margin:0;color:var(--g100);font-size:14px}
+.pbox textarea{width:100%;height:min(60vh,420px);font:13px/1.45 ui-monospace,Menlo,Consolas,monospace;padding:12px;border-radius:6px;border:0;background:#fff;color:var(--ink)}
+button:focus-visible,a:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
 .end{text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center;max-width:420px}
-.end h2{font:800 28px var(--f);color:var(--verde);margin:0}
-.end p{color:var(--muted);margin:0;line-height:1.5}
-.btn{font:700 14px var(--f);border:1px solid var(--verde);background:var(--verde);color:#fff;padding:10px 18px;border-radius:2px;cursor:pointer;text-decoration:none}
-.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.end h2{font:800 28px var(--f);color:var(--lime);margin:0}
+.end p{color:var(--g100);margin:0;line-height:1.5}
+.end p.small{font-size:12px;color:var(--bay);margin-top:12px}
+.btn{font:700 14px var(--f);border:1px solid var(--lime);background:var(--lime);color:var(--dark);padding:10px 18px;border-radius:4px;cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.3)}
 .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.swipe{position:absolute;bottom:calc(10px + env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;font-size:12px;color:var(--muted)}
+.swipe{position:absolute;bottom:calc(10px + env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;font-size:12px;color:var(--bay)}
 @media (prefers-reduced-motion:reduce){.inner{transition:none}}
-@media (max-width:420px){.nav{gap:12px} .nav .logo{width:44px} .nav .links{gap:12px} .nav a{font-size:13px}}
+@media (max-width:520px){.nav{gap:14px} .nav .links{gap:12px} .nav a.l{font-size:13px}}
 </style>
 </head>
 <body>
 <header class="top">
   <nav class="nav" aria-label="Site">
-    <div class="logo" role="img" aria-label="ids"></div>
-    <div class="links"><a href="index.html">Simulator</a><a href="cards.html" aria-current="page">Study cards</a><a href="concepts.html">Concepts</a><a href="plan.html">Study plan</a></div>
+    <a class="brand" href="index.html" aria-label="Gateway Prep home"><span>Gateway Prep</span></a>
+    <div class="links"><a class="l" href="index.html">Simulator</a><a class="l" href="cards.html" aria-current="page">Study cards</a><a class="l" href="concepts.html">Concepts</a><a class="l" href="plan.html">Study plan</a></div>
   </nav>
   <div class="bar" id="bar"></div>
 </header>
@@ -98,8 +95,8 @@ CARDS.forEach((c,i)=>c.id=i);
 let marks=store.get("marks",{}); // id -> "known" | "again"
 let filter="all", order=[], cur=0, shuffled=false;
 let lang=store.get("lang","en"); if(lang!=="en"&&lang!=="es") lang="en";
-const UI={en:{all:"All",review:"To review",tap:"Tap to reveal",answer:"answer",trap:"Exam trap:",flip:"Flip",got:"Got it",again:"Again",mix:"Shuffle",mixed:"Shuffled",known:"Known",ragain:"Review again",swipe:"Swipe up for the next card",kn:"known",end:"End of the deck",left:n=>n+" cards are not marked as known yet. Review them, then test yourself in the simulator.",done:"Every card is marked as known. Take a full mock exam to confirm.",pend:"Review pending cards",sim:"Open simulator",reset:"Reset card progress",confirm:"Tap again to confirm reset",ai:"Explain",copied:"Prompt copied. Paste it into your AI assistant.",manual:"Copy this prompt and paste it into your AI assistant.",close:"Close"},
- es:{all:"Todas",review:"Por repasar",tap:"Toca para ver la respuesta",answer:"respuesta",trap:"Trampa del examen:",flip:"Voltear",got:"La sé",again:"Repasar",mix:"Mezclar",mixed:"Mezcladas",known:"La sé",ragain:"Por repasar",swipe:"Desliza hacia arriba para la siguiente",kn:"dominadas",end:"Fin del mazo",left:n=>n+" tarjetas aún no están marcadas como dominadas. Repásalas y luego mide tu avance en el simulador.",done:"Todas las tarjetas están dominadas. Haz un examen completo para confirmarlo.",pend:"Repasar pendientes",sim:"Abrir simulador",reset:"Reiniciar progreso de tarjetas",confirm:"Toca de nuevo para confirmar",ai:"Explicar",copied:"Prompt copiado. Pégalo en tu IA.",manual:"Copia este prompt y pégalo en tu IA.",close:"Cerrar"}};
+const UI={en:{all:"All",review:"To review",tap:"Tap to reveal",answer:"answer",trap:"Exam trap:",flip:"Flip",got:"Got it",again:"Again",mix:"Shuffle",mixed:"Shuffled",known:"Known",ragain:"Review again",swipe:"Swipe up for the next card",kn:"known",end:"End of the deck",left:n=>n+" cards are not marked as known yet. Review them, then test yourself in the simulator.",done:"Every card is marked as known. Take a full mock exam to confirm.",pend:"Review pending cards",sim:"Open simulator",reset:"Reset card progress",confirm:"Tap again to confirm reset",ai:"Explain",copied:"Prompt copied. Paste it into your AI assistant.",manual:"Copy this prompt and paste it into your AI assistant.",close:"Close",legal:"Gateway Prep is independent study material. Not affiliated with, sponsored or endorsed by Kong Inc. Kong and Kong Konnect are trademarks of Kong Inc."},
+ es:{all:"Todas",review:"Por repasar",tap:"Toca para ver la respuesta",answer:"respuesta",trap:"Trampa del examen:",flip:"Voltear",got:"La sé",again:"Repasar",mix:"Mezclar",mixed:"Mezcladas",known:"La sé",ragain:"Por repasar",swipe:"Desliza hacia arriba para la siguiente",kn:"dominadas",end:"Fin del mazo",left:n=>n+" tarjetas aún no están marcadas como dominadas. Repásalas y luego mide tu avance en el simulador.",done:"Todas las tarjetas están dominadas. Haz un examen completo para confirmarlo.",pend:"Repasar pendientes",sim:"Abrir simulador",reset:"Reiniciar progreso de tarjetas",confirm:"Toca de nuevo para confirmar",ai:"Explicar",copied:"Prompt copiado. Pégalo en tu IA.",manual:"Copia este prompt y pégalo en tu IA.",close:"Cerrar",legal:"Gateway Prep es material de estudio independiente. No está afiliado, patrocinado ni respaldado por Kong Inc. Kong y Kong Konnect son marcas de Kong Inc."}};
 const T=()=>UI[lang];
 const tx=c=>{ if(lang==="es"&&CARDS_ES[c.id]){const e=CARDS_ES[c.id];return {h:e[0],q:e[1],p:e[2],t:e[3]};} return c; };
 const dn=d=>(lang==="es"?CARD_DOMAINS_ES:CARD_DOMAINS)[d];
@@ -165,7 +162,8 @@ function endSlide(){
   return `<section class="slide"><div class="end"><h2>${T().end}</h2>
    <p>${left?T().left(left):T().done}</p>
    <div class="row"><button class="btn" id="again">${T().pend}</button><a class="btn ghost" href="index.html">${T().sim}</a></div>
-   <button class="btn ghost" id="reset">${T().reset}</button></div></section>`;
+   <button class="btn ghost" id="reset">${T().reset}</button>
+   <p class="small">${T().legal}</p></div></section>`;
 }
 function build(){
   const p=pool(); order=shuffled?shuffle(p):p; cur=0;
